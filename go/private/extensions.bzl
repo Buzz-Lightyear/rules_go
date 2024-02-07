@@ -46,6 +46,7 @@ _download_tag = tag_class(
         ),
         "urls": attr.string_list(default = ["https://dl.google.com/go/{}"]),
         "version": attr.string(),
+        "go_work": attr.label(allow_single_file = True),
         "patches": attr.label_list(
             doc = "A list of patches to apply to the SDK after downloading it",
         ),
@@ -165,6 +166,7 @@ def _go_sdk_impl(ctx):
             # SDKs without an explicit version are fetched even when not selected by toolchain
             # resolution. This is acceptable if brought in by the root module, but transitive
             # dependencies should not slow down the build in this way.
+            print("Processing module: {module}".format(module = module.name))
             if not module.is_root and not download_tag.version:
                 fail("go_sdk.download: version must be specified in non-root module " + module.name)
 
